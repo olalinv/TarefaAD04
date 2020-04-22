@@ -3,9 +3,12 @@ package com.robottitto;
 import com.robottitto.model.*;
 import com.robottitto.repository.*;
 import com.robottitto.util.DBUtils;
+import com.robottitto.util.MenuUtils;
 import com.robottitto.util.SAXUtils;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.List;
@@ -76,39 +79,16 @@ public class Main {
                     Province province = new Province();
                     province.setId(enterProvince);
                     store.setProvince(province);
-                    try {
-                        StoreRepository.addStore(store);
-                        System.out.println("Engadiuse a tenda " + store.getName());
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    StoreRepository.addStore(store);
                     break;
                 case 2:
-                    try {
-                        List<Store> stores = StoreRepository.getStores();
-                        System.out.println("Lista de tendas:");
-                        for (Store s : stores) {
-                            System.out.printf("Id: %d Nome: %s Cidade: %s Provincia: %d%n", s.getId(), s.getName(), s.getCity(), s.getProvince());
-                        }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    MenuUtils.getStores();
                     break;
                 case 3:
-                    System.out.println("Introduza o nome da tenda:");
-                    String enterStoreName = scanner.nextLine();
-//                    try {
-//                        StoreRepository.deleteStore(enterStoreName);
-//                        System.out.println("Eliminouse a tenda " + enterStoreName);
-//                    } catch (SQLException e) {
-//                        e.printStackTrace();
-//                    } catch (FileNotFoundException e) {
-//                        e.printStackTrace();
-//                    }
+                    MenuUtils.getStores();
+                    System.out.println("Introduza o ID da tenda:");
+                    int enterStoreId = Integer.parseInt(scanner.nextLine());
+                    StoreRepository.deleteStore(enterStoreId);
                     break;
                 case 4:
                     Product product = new Product();
@@ -121,143 +101,88 @@ public class Main {
                     System.out.println("Introduza o prezo do produto:");
                     double enterProductPrice = Double.parseDouble(scanner.nextLine());
                     product.setPrice(enterProductPrice);
-                    try {
-                        ProductRepository.addProduct(product);
-                        System.out.println("Engadiuse o produto " + product.getName());
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
+                    ProductRepository.addProduct(product);
                     break;
                 case 5:
-                    try {
-                        List<Product> products = ProductRepository.getProducts();
-                        System.out.println("Lista de produtos:");
-                        for (Product p : products) {
-                            System.out.printf("Id: %d Nome: %s Descrición: %s Prezo: %f%n", p.getId(), p.getName(), p.getDescription(), p.getPrice());
-                        }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    MenuUtils.getProducts();
                     break;
                 case 6:
                     StoreProduct storeProduct = new StoreProduct();
-                    // Nome tenda
-                    System.out.println("Introduza o nome da tenda:");
-                    enterStoreName = scanner.nextLine();
-                    storeProduct.setStore(StoreRepository.getStore(enterStoreName));
-                    // Nome produto
-                    System.out.println("Introduza o nome do produto:");
-                    enterProductName = scanner.nextLine();
-                    storeProduct.setProduct(ProductRepository.getProduct(enterProductName));
+                    MenuUtils.getStores();
+                    // ID tenda
+                    System.out.println("Introduza o ID da tenda:");
+                    enterStoreId = scanner.nextInt();
+                    storeProduct.setStore(StoreRepository.getStore(enterStoreId));
+                    MenuUtils.getProducts();
+                    // ID produto
+                    System.out.println("Introduza o ID do produto:");
+                    int enterProductId = scanner.nextInt();
+                    storeProduct.setProduct(ProductRepository.getProduct(enterProductId));
                     // Cantidade produto
                     System.out.println("Introduza a cantidade do produto:");
                     double enterQuantity = Double.parseDouble(scanner.nextLine());
                     storeProduct.setQuantity(enterQuantity);
-                    try {
-                        StoreProductRepository.addStoreProduct(storeProduct);
-                        System.out.println("Engadíronse " + storeProduct.getQuantity() + " unidades do produto " + storeProduct.getProduct().getName() + " á tenda " +
-                                storeProduct.getStore().getName());
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    StoreProductRepository.addStoreProduct(storeProduct);
                     break;
                 case 7:
-                    // Nome tenda
-                    System.out.println("Introduza o nome da tenda:");
-                    enterStoreName = scanner.nextLine();
-                    try {
-                        List<Product> products = ProductRepository.getProductsByStore(enterStoreName);
-                        System.out.println("Lista de produtos:");
-                        for (Product p : products) {
-                            System.out.printf("Id: %d Nome: %s Prezo: %f", p.getId(), p.getName(), p.getPrice());
-                        }
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    MenuUtils.getStores();
+                    // ID tenda
+                    System.out.println("Introduza o ID da tenda:");
+                    enterStoreId = scanner.nextInt();
+                    MenuUtils.getProductsByStore(enterStoreId);
                     break;
                 case 8:
                     storeProduct = new StoreProduct();
-                    // Nome tenda
-                    System.out.println("Introduza o nome da tenda:");
-                    enterStoreName = scanner.nextLine();
-                    storeProduct.setStore(StoreRepository.getStore(enterStoreName));
+                    MenuUtils.getStores();
+                    // ID tenda
+                    System.out.println("Introduza o ID da tenda:");
+                    enterStoreId = scanner.nextInt();
+                    storeProduct.setStore(StoreRepository.getStore(enterStoreId));
+                    MenuUtils.getProductsByStore(enterStoreId);
                     // Nome produto
-                    System.out.println("Introduza o nome do produto:");
-                    enterProductName = scanner.nextLine();
-                    storeProduct.setProduct(ProductRepository.getProduct(enterProductName));
+                    System.out.println("Introduza o ID do produto:");
+                    enterProductId = scanner.nextInt();
+                    storeProduct.setProduct(ProductRepository.getProduct(enterProductId));
                     // Cantidade produto
                     System.out.println("Introduza a cantidade do produto:");
                     enterQuantity = Double.parseDouble(scanner.nextLine());
                     storeProduct.setQuantity(enterQuantity);
-                    try {
-                        StoreProductRepository.updateStoreProduct(storeProduct);
-                        System.out.println("Actualizouse a " + storeProduct.getQuantity() + " o stock do produto " + storeProduct.getProduct().getName() + " na tenda " +
-                                storeProduct.getStore().getName());
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    StoreProductRepository.updateStoreProduct(storeProduct);
                     break;
                 case 9:
                     storeProduct = new StoreProduct();
-                    // Nome tenda
-                    System.out.println("Introduza o nome da tenda:");
-                    enterStoreName = scanner.nextLine();
-                    storeProduct.setStore(StoreRepository.getStore(enterStoreName));
-                    // Nome produto
-                    System.out.println("Introduza o nome do produto:");
-                    enterProductName = scanner.nextLine();
-                    storeProduct.setProduct(ProductRepository.getProduct(enterProductName));
-                    int stock = 0;
-                    try {
-                        stock = StoreProductRepository.getStoreProductStock(storeProduct);
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    MenuUtils.getStores();
+                    // ID tenda
+                    System.out.println("Introduza o ID da tenda:");
+                    enterStoreId = scanner.nextInt();
+                    storeProduct.setStore(StoreRepository.getStore(enterStoreId));
+                    MenuUtils.getProductsByStore(enterStoreId);
+                    // ID produto
+                    System.out.println("Introduza o ID do produto:");
+                    enterProductId = scanner.nextInt();
+                    storeProduct.setProduct(ProductRepository.getProduct(enterProductId));
+                    int stock = StoreProductRepository.getStoreProductStock(storeProduct);
                     System.out.printf("Stock: %d%n", stock);
                     break;
                 case 10:
                     storeProduct = new StoreProduct();
-                    // Nome tenda
-                    System.out.println("Introduza o nome da tenda:");
-                    enterStoreName = scanner.nextLine();
-                    storeProduct.setStore(StoreRepository.getStore(enterStoreName));
-                    // Nome produto
-                    System.out.println("Introduza o nome do produto:");
-                    enterProductName = scanner.nextLine();
-                    storeProduct.setProduct(ProductRepository.getProduct(enterProductName));
-                    try {
-                        StoreProductRepository.removeStoreProduct(storeProduct);
-                        System.out.println("Elimionouse o produto " + storeProduct.getProduct().getName() + " na tenda " +
-                                storeProduct.getStore().getName());
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    MenuUtils.getStores();
+                    // ID tenda
+                    System.out.println("Introduza o ID da tenda:");
+                    enterStoreId = scanner.nextInt();
+                    storeProduct.setStore(StoreRepository.getStore(enterStoreId));
+                    MenuUtils.getProductsByStore(enterStoreId);
+                    // ID produto
+                    System.out.println("Introduza o ID do produto:");
+                    enterProductId = scanner.nextInt();
+                    storeProduct.setProduct(ProductRepository.getProduct(enterProductId));
+                    StoreProductRepository.removeStoreProduct(storeProduct);
                     break;
                 case 11:
-                    System.out.println("Introduza o nome do produto:");
-                    enterProductName = scanner.nextLine();
-//                    try {
-//                        ProductRepository.deleteProduct(enterProductName);
-//                        System.out.println("Eliminouse o produto " + enterProductName);
-//                    } catch (SQLException e) {
-//                        e.printStackTrace();
-//                    } catch (FileNotFoundException e) {
-//                        e.printStackTrace();
-//                    }
+                    MenuUtils.getProducts();
+                    System.out.println("Introduza o ID do produto:");
+                    enterProductId = scanner.nextInt();
+                    ProductRepository.deleteProduct(enterProductId);
                     break;
                 case 12:
                     Customer customer = new Customer();

@@ -25,6 +25,14 @@ public class StoreProduct {
     public StoreProduct() {
     }
 
+    public StoreProductId getId() {
+        return id;
+    }
+
+    public void setId(StoreProductId id) {
+        this.id = id;
+    }
+
     public Store getStore() {
         return store;
     }

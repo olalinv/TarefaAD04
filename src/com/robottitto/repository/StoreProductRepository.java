@@ -9,19 +9,19 @@ import java.sql.SQLException;
 public class StoreProductRepository {
 
     public static int getStoreProductStock(StoreProduct storeProduct) throws FileNotFoundException, SQLException {
-        return StoreProductDAO.getStoreProductStock(storeProduct);
+        return StoreProductDAO.getStoreProductQuantity(storeProduct);
     }
 
-    public static void addStoreProduct(StoreProduct storeProduct) throws FileNotFoundException, SQLException {
+    public static void addStoreProduct(StoreProduct storeProduct) {
         StoreProductDAO.addStoreProduct(storeProduct);
     }
 
-    public static void updateStoreProduct(StoreProduct storeProduct) throws FileNotFoundException, SQLException {
+    public static void updateStoreProduct(StoreProduct storeProduct) {
         StoreProductDAO.updateStoreProduct(storeProduct);
     }
 
-    public static void removeStoreProduct(StoreProduct storeProduct) throws FileNotFoundException, SQLException {
-        StoreProductDAO.removeStoreProduct(storeProduct);
+    public static void removeStoreProduct(StoreProduct storeProduct) {
+        StoreProductDAO.deleteStoreProduct(storeProduct);
     }
 
 }

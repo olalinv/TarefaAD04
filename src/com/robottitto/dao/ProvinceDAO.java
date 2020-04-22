@@ -16,7 +16,7 @@ public class ProvinceDAO {
 
     public static List<Province> getProvinces() throws HibernateException, FileNotFoundException {
         List<Province> provinces = new ArrayList<Province>();
-        provinces = HibernateUtils.createQuery("SELECT * FROM PROVINCE").list();
+        provinces = HibernateUtils.createQuery("SELECT p FROM Province p ORDER BY id").list();
         return provinces;
     }
 
