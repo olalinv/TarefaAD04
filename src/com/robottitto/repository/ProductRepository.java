@@ -9,7 +9,7 @@ import java.util.List;
 
 public class ProductRepository {
 
-    public static List<Product> getProducts() throws FileNotFoundException, SQLException {
+    public static List<Product> getProducts() throws FileNotFoundException {
         return ProductDAO.getProducts();
     }
 

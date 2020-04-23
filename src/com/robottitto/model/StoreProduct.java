@@ -10,19 +10,25 @@ public class StoreProduct {
     private StoreProductId id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("STORE_ID")
+    @MapsId("id")
     @JoinColumn(name = "STORE_ID")
     private Store store;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("PRODUCT_ID")
+    @MapsId("id")
     @JoinColumn(name = "PRODUCT_ID")
     private Product product;
 
     @Column(name = "ST_PR_QUANTITY")
-    private Double quantity;
+    private int quantity;
 
     public StoreProduct() {
+    }
+
+    public StoreProduct(Store store, Product product) {
+        this.store = store;
+        this.product = product;
+        this.id = new StoreProductId(store.getId(), product.getId());
     }
 
     public StoreProductId getId() {
@@ -49,11 +55,11 @@ public class StoreProduct {
         this.product = product;
     }
 
-    public Double getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Double quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

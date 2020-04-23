@@ -21,13 +21,11 @@ public class StoreDAO {
 
     public static Store getStore(int storeId) {
         Store store = new Store();
-        Query query = null;
         try {
-            query = HibernateUtils.getSession().createQuery("SELECT s FROM Store s WHERE s.id=:storeId");
+            store = HibernateUtils.getSession().get(Store.class, storeId);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        query.setParameter("storeId", storeId);
         return store;
     }
 

@@ -1,49 +1,39 @@
 package com.robottitto.dao;
 
 import com.robottitto.model.Product;
-import com.robottitto.model.Store;
-import com.robottitto.util.DBUtils;
 import com.robottitto.util.HibernateUtils;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.io.FileNotFoundException;
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDAO {
 
-    public static List<Product> getProducts() {
-        List<Product> products = new ArrayList<Product>();
-        try {
-            products = HibernateUtils.createQuery("SELECT p FROM Product p").list();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+    public static List<Product> getProducts() throws FileNotFoundException {
+        List<Product> products;
+        products = HibernateUtils.createQuery("SELECT p FROM Product p").list();
         return products;
     }
 
     public static Product getProduct(int productId) {
         Product product = new Product();
-        Query query = null;
         try {
-            query = HibernateUtils.getSession().createQuery("SELECT p FROM Product p WHERE p.id=:productId");
+            product = HibernateUtils.getSession().get(Product.class, productId);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        query.setParameter("productId", productId);
         return product;
     }
 
     public static List<Product> getProductsByStore(int storeId) {
         List<Product> products = new ArrayList<Product>();
-        Query query = null;
         try {
-            query = HibernateUtils.getSession().createQuery("SELECT p FROM Product p JOIN p.storeProducts s WHERE STORE_ID=:storeId");
+            Query query = HibernateUtils.getSession().createQuery("SELECT p FROM Product p JOIN p.storeProducts sp WHERE STORE_ID=:storeId");
             query.setParameter("storeId", storeId);
+            products = query.list();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

@@ -2,10 +2,7 @@ package com.robottitto.util;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.robottitto.model.Config;
-import com.robottitto.model.Franchise;
-import com.robottitto.model.Province;
-import com.robottitto.model.Provinces;
+import com.robottitto.model.*;
 
 import java.io.*;
 import java.util.List;
@@ -14,6 +11,7 @@ public class JSONUtils {
 
     public static final String FRANCHISE_JSON = "franchise.json";
     public static final String PROVINCES_JSON = "provinces.json";
+    public static final String REPORT_JSON = "report.json";
 
     public static void generateFranchise(Franchise franchise) throws IOException {
         String json = new Gson().toJson(franchise);
@@ -41,6 +39,14 @@ public class JSONUtils {
     public static Config readConfig(String json) throws FileNotFoundException {
         Config config = new Gson().fromJson(new FileReader(json), Config.class);
         return config;
+    }
+
+    public static void generateReport(Report report) throws IOException {
+        String json = new Gson().toJson(report);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(REPORT_JSON));
+        writer.write(json);
+        writer.close();
+        System.out.println("Xerouse o informe " + REPORT_JSON);
     }
 
 }

@@ -4,21 +4,20 @@ import com.robottitto.dao.CustomerDAO;
 import com.robottitto.model.Customer;
 
 import java.io.FileNotFoundException;
-import java.sql.SQLException;
 import java.util.List;
 
 public class CustomerRepository {
 
-    public static List<Customer> getCustomers() throws FileNotFoundException, SQLException {
+    public static List<Customer> getCustomers() throws FileNotFoundException {
         return CustomerDAO.getCustomers();
     }
 
-    public static void addCustomer(Customer customer) throws FileNotFoundException, SQLException {
+    public static void addCustomer(Customer customer) {
         CustomerDAO.addCustomer(customer);
     }
 
-    public static void deleteCustomer(Customer customer) throws FileNotFoundException, SQLException {
-        CustomerDAO.removeCustomer(customer);
+    public static void deleteCustomer(int customerId) {
+        CustomerDAO.deleteCustomer(customerId);
     }
 
 }

@@ -5,10 +5,8 @@ import com.robottitto.repository.*;
 import com.robottitto.util.DBUtils;
 import com.robottitto.util.MenuUtils;
 import com.robottitto.util.SAXUtils;
-import org.hibernate.HibernateException;
 import org.hibernate.Session;
 
-import java.awt.*;
 import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.List;
@@ -19,8 +17,12 @@ public class Main {
     private static final String URL_EL_PAIS = "http://ep00.epimg.net/rss/elpais/portada.xml";
 
     public static void main(String[] args) throws FileNotFoundException, SQLException {
-        Session session = DBUtils.connect();
+        DBUtils.connect();
         DBUtils.insertProvinces();
+        showMenu();
+    }
+
+    private static void showMenu() throws FileNotFoundException, SQLException {
         Scanner scanner = new Scanner(System.in);
         int option;
         do {
@@ -107,20 +109,20 @@ public class Main {
                     MenuUtils.getProducts();
                     break;
                 case 6:
-                    StoreProduct storeProduct = new StoreProduct();
                     MenuUtils.getStores();
                     // ID tenda
                     System.out.println("Introduza o ID da tenda:");
-                    enterStoreId = scanner.nextInt();
-                    storeProduct.setStore(StoreRepository.getStore(enterStoreId));
+                    enterStoreId = Integer.parseInt(scanner.nextLine());
+                    store = StoreRepository.getStore(enterStoreId);
                     MenuUtils.getProducts();
                     // ID produto
                     System.out.println("Introduza o ID do produto:");
-                    int enterProductId = scanner.nextInt();
-                    storeProduct.setProduct(ProductRepository.getProduct(enterProductId));
+                    int enterProductId = Integer.parseInt(scanner.nextLine());
+                    product = ProductRepository.getProduct(enterProductId);
                     // Cantidade produto
                     System.out.println("Introduza a cantidade do produto:");
-                    double enterQuantity = Double.parseDouble(scanner.nextLine());
+                    int enterQuantity = Integer.parseInt(scanner.nextLine());
+                    StoreProduct storeProduct = new StoreProduct(store, product);
                     storeProduct.setQuantity(enterQuantity);
                     StoreProductRepository.addStoreProduct(storeProduct);
                     break;
@@ -128,39 +130,39 @@ public class Main {
                     MenuUtils.getStores();
                     // ID tenda
                     System.out.println("Introduza o ID da tenda:");
-                    enterStoreId = scanner.nextInt();
+                    enterStoreId = Integer.parseInt(scanner.nextLine());
                     MenuUtils.getProductsByStore(enterStoreId);
                     break;
                 case 8:
-                    storeProduct = new StoreProduct();
                     MenuUtils.getStores();
                     // ID tenda
                     System.out.println("Introduza o ID da tenda:");
-                    enterStoreId = scanner.nextInt();
-                    storeProduct.setStore(StoreRepository.getStore(enterStoreId));
+                    enterStoreId = Integer.parseInt(scanner.nextLine());
+                    store = StoreRepository.getStore(enterStoreId);
                     MenuUtils.getProductsByStore(enterStoreId);
-                    // Nome produto
+                    // ID produto
                     System.out.println("Introduza o ID do produto:");
-                    enterProductId = scanner.nextInt();
-                    storeProduct.setProduct(ProductRepository.getProduct(enterProductId));
+                    enterProductId = Integer.parseInt(scanner.nextLine());
+                    product = ProductRepository.getProduct(enterProductId);
                     // Cantidade produto
                     System.out.println("Introduza a cantidade do produto:");
-                    enterQuantity = Double.parseDouble(scanner.nextLine());
+                    enterQuantity = Integer.parseInt(scanner.nextLine());
+                    storeProduct = new StoreProduct(store, product);
                     storeProduct.setQuantity(enterQuantity);
                     StoreProductRepository.updateStoreProduct(storeProduct);
                     break;
                 case 9:
-                    storeProduct = new StoreProduct();
                     MenuUtils.getStores();
                     // ID tenda
                     System.out.println("Introduza o ID da tenda:");
-                    enterStoreId = scanner.nextInt();
-                    storeProduct.setStore(StoreRepository.getStore(enterStoreId));
+                    enterStoreId = Integer.parseInt(scanner.nextLine());
+                    store = StoreRepository.getStore(enterStoreId);
                     MenuUtils.getProductsByStore(enterStoreId);
                     // ID produto
                     System.out.println("Introduza o ID do produto:");
-                    enterProductId = scanner.nextInt();
-                    storeProduct.setProduct(ProductRepository.getProduct(enterProductId));
+                    enterProductId = Integer.parseInt(scanner.nextLine());
+                    product = ProductRepository.getProduct(enterProductId);
+                    storeProduct = new StoreProduct(store, product);
                     int stock = StoreProductRepository.getStoreProductStock(storeProduct);
                     System.out.printf("Stock: %d%n", stock);
                     break;
@@ -169,19 +171,19 @@ public class Main {
                     MenuUtils.getStores();
                     // ID tenda
                     System.out.println("Introduza o ID da tenda:");
-                    enterStoreId = scanner.nextInt();
+                    enterStoreId = Integer.parseInt(scanner.nextLine());
                     storeProduct.setStore(StoreRepository.getStore(enterStoreId));
                     MenuUtils.getProductsByStore(enterStoreId);
                     // ID produto
                     System.out.println("Introduza o ID do produto:");
-                    enterProductId = scanner.nextInt();
+                    enterProductId = Integer.parseInt(scanner.nextLine());
                     storeProduct.setProduct(ProductRepository.getProduct(enterProductId));
                     StoreProductRepository.removeStoreProduct(storeProduct);
                     break;
                 case 11:
                     MenuUtils.getProducts();
                     System.out.println("Introduza o ID do produto:");
-                    enterProductId = scanner.nextInt();
+                    enterProductId = Integer.parseInt(scanner.nextLine());
                     ProductRepository.deleteProduct(enterProductId);
                     break;
                 case 12:
@@ -195,41 +197,19 @@ public class Main {
                     System.out.println("Introduza o email do cliente:");
                     String enterCustomerEmail = scanner.nextLine();
                     customer.setEmail(enterCustomerEmail);
-                    try {
-                        CustomerRepository.addCustomer(customer);
-                        System.out.println("Engadiuse o cliente " + customer.getName() + " " + customer.getSurname());
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
+                    CustomerRepository.addCustomer(customer);
                     break;
                 case 13:
-                    try {
-                        List<Customer> customers = CustomerRepository.getCustomers();
-                        for (Customer c : customers) {
-                            System.out.printf("Id: %d Nome: %s Apelido: %s Email: %s%n", c.getId(), c.getName(), c.getSurname(), c.getEmail());
-                        }
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
+                    MenuUtils.getCustomers();
                     break;
                 case 14:
-                    System.out.println("Introduza o nome do cliente:");
-                    enterCustomerName = scanner.nextLine();
-//                    try {
-//                        CustomerRepository.deleteCustomer(enterCustomerName);
-//                        System.out.println("Eliminouse o cliente " + enterCustomerName);
-//                    } catch (FileNotFoundException e) {
-//                        e.printStackTrace();
-//                    } catch (SQLException e) {
-//                        e.printStackTrace();
-//                    }
+                    MenuUtils.getCustomers();
+                    System.out.println("Introduza o ID do cliente:");
+                    int enterCustomerId = Integer.parseInt(scanner.nextLine());
+                    CustomerRepository.deleteCustomer(enterCustomerId);
                     break;
                 case 15:
-                    // Xerar informe
+                    MenuUtils.getReport();
                     break;
                 case 16:
                     SAXUtils.listHeadings(URL_EL_PAIS);

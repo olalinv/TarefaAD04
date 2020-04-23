@@ -1,0 +1,1 @@
+{"stores":[{"id":1,"name":"Amazon","products":[{"id":1,"name":"iPhone","stock":20},{"id":2,"name":"Pixel","stock":50},{"id":3,"name":"Galaxy 10","stock":35},{"id":4,"name":"Xiaomi Mi3","stock":25}]},{"id":2,"name":"Woxter","products":[{"id":3,"name":"Galaxy 10","stock":15},{"id":4,"name":"Xiaomi Mi3","stock":50}]}]}

@@ -1,5 +1,6 @@
 package com.robottitto.dao;
 
+import com.robottitto.model.Store;
 import com.robottitto.model.StoreProduct;
 import com.robottitto.util.HibernateUtils;
 import org.hibernate.HibernateException;
@@ -8,16 +9,22 @@ import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class StoreProductDAO {
 
+    public static List<StoreProduct> getStoreProducts() throws FileNotFoundException {
+        List<StoreProduct> storeProducts;
+        storeProducts = HibernateUtils.createQuery("SELECT s FROM StoreProduct s").list();
+        return storeProducts;
+    }
+
     public static int getStoreProductQuantity(StoreProduct storeProduct) {
         int quantity = 0;
-        Query query = null;
         try {
-            query = HibernateUtils.getSession().createQuery("SELECT sp FROM StoreProduct sp WHERE sp.STORE_ID=:storeId AND sp.PRODUCT_ID=:productId");
-            query.setParameter("storeId", storeProduct.getStore().getId());
-            query.setParameter("productId", storeProduct.getProduct().getId());
+            StoreProduct sp = HibernateUtils.getSession().get(StoreProduct.class, storeProduct.getId());
+            quantity = sp.getQuantity();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }

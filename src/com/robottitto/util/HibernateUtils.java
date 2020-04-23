@@ -31,7 +31,7 @@ public class HibernateUtils {
                 properties.put(Environment.PASS, config.getPassword());
                 properties.put(Environment.DIALECT, config.getDialect());
                 properties.put(Environment.HBM2DDL_AUTO, config.getHBM2DDL_AUTO());
-                properties.put(Environment.SHOW_SQL, config.getHBM2DDL_AUTO());
+                properties.put(Environment.SHOW_SQL, config.getSHOW_SQL());
                 conf.setProperties(properties);
                 conf.addAnnotatedClass(Province.class);
                 conf.addAnnotatedClass(Store.class);
